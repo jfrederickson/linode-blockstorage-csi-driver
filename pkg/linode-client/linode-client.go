@@ -27,18 +27,9 @@ type LinodeClient interface {
 }
 
 func NewLinodeClient(token, uaPrefix string, url string) *linodego.Client {
-	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{
-		AccessToken: token,
-	})
-
-	oauth2Client := &http.Client{
-		Transport: &oauth2.Transport{
-			Source: tokenSource,
-		},
-	}
-
 	ua := fmt.Sprintf("%s linodego/%s", uaPrefix, linodego.Version)
-	linodeClient := linodego.NewClient(oauth2Client)
+	linodeClient := linodego.NewClient(nil)
+	linodeClient.SetToken(token)
 	linodeClient.SetUserAgent(ua)
 	linodeClient.SetDebug(true)
 
